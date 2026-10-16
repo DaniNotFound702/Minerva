@@ -7,6 +7,7 @@ load_dotenv()
 SCHOOL = os.getenv("SCHOOL")
 SCHOOLYEAR = os.getenv("SCHOOLYEAR")
 AUTHORIZATION = os.getenv("AUTHORIZATION")
+
 base_url = "https://" + str(SCHOOL) + ".zportal.nl/api/3/"
 
 HEADERS = {
