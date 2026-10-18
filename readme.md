@@ -12,4 +12,4 @@ downloading the responses as a JSON file. The available data includes:
 - Branches
 
 # More info coming soon!!
-
+Note: you need a api key for this script so it can't be testedd
