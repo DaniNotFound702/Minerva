@@ -16,30 +16,8 @@ HEADERS = {
 }
 
 
-def get_year_id():
-    fields = ("year", "id")
 
-    req_par = base_url + "schoolsinschoolyears?fields=" + ",".join(fields)
-    req = requests.get(req_par, headers=HEADERS)
-    rows = req.json()["response"]["data"]
-
-    year_id = {}
-    for row in rows:
-        year_id[row["year"]] = row["id"]
-
-    startYear = rows[0]["year"]
-    endYear = rows[-1]["year"]
-    startYearId = year_id[startYear]
-    endYearId = year_id[endYear]
-
-    return startYearId, endYearId, startYear, endYear, year_id
-
-
-def get_appointments():
-    _, _, startYear, endYear, year_id = get_year_id()
-    print(year_id)
-    data = []
-
+def appointments(year=SCHOOLYEAR, school_year_id=SCHOOLYEAR):
     fields = (
         "id", "appointmentInstance", "start", "end", "startTimeSlot", "endTimeSlot",
         "branch", "type", "groupsInDepartments", "locationsOfBranch", "optional",
@@ -53,45 +31,77 @@ def get_appointments():
         "teachers", "onlineTeachers",
     )
 
-    for year, school_year_id in year_id.items():
-        print(f"Getting appointments for year {year} (id {school_year_id})...")
+    print(f"Getting appointments for year {year} (id {school_year_id})...")
 
-        # schooljaar `year` loopt van 1 aug `year` t/m 31 jul `year + 1`
-        start = int(datetime.datetime(int(year), 8, 1).timestamp())
-        end = int(datetime.datetime(int(year) + 1, 7, 31).timestamp())
+    # schooljaar `year` loopt van 1 aug `year` t/m 31 jul `year + 1`
+    start = int(datetime.datetime(int("2026"), 8, 1).timestamp())
+    end = int(datetime.datetime(int("2026") + 1, 7, 31).timestamp())
 
-        req_par = (
-            base_url + "appointments?schoolInSchoolYear=" + str(school_year_id)
-            + "&user=21187"
-            + "&start=" + str(start)
-            + "&end=" + str(end)
-            + "&fields=" + ",".join(fields)
-        )
+    req_par = (
+        base_url
+        + "appointments?schoolInSchoolYear=" + str(school_year_id)
+        + "&user=---"
+        + "&start=" + str(start)
+        + "&end=" + str(end)
+        + "&fields=" + ",".join(fields)
+    )
 
-        try:
-            req = requests.get(req_par, headers=HEADERS)
-            if req.status_code != 200:
-                print(f"Error fetching appointments for year {year}: {req.status_code} {req.text[:200]}")
-                continue
-            print(f"Successfully fetched appointments for year {year}.")
-            data.extend(req.json()["response"]["data"])
-        except Exception as e:
-            print(f"Error fetching appointments for year {year}: {e}")
-            continue
+    return req_par
 
-    return data
+print(appointments())
 
 
-def get_users():
+def branchesofschools():
+    fields = ("branch", "id", "schoolInSchoolYear")
+    req_par = base_url + "branchesofschools?fields=" + ",".join(fields)
+    return req_par
+
+
+def users():
     fields = ("code",)
-
     req_par = base_url + "users?schoolInSchoolYear=" + str(SCHOOLYEAR) + "&fields=" + ",".join(fields)
-    req = requests.get(req_par, headers=HEADERS)
-    print(req.json()["response"]["data"])
+    return req_par
 
 
-data = get_appointments()
-json_str = json.dumps(data, indent=4)
-with open("sample.json", "w") as f:
-    f.write(json_str)
+def departmentsofbranches (): 
+    fields = ("branchOfSchool", "code","id", "schoolInSchoolYear")
+    req_par = base_url + "departmentsofbranches?fields=" + ",".join(fields)
+    return req_par
 
+
+def branches():
+    fields = ("name", "code", "somCode", "somUuid")
+    req_par = base_url + "branches?fields=" + ",".join(fields)
+    return req_par
+
+def choosableindepartments():
+    fields = ("departmentOfBranch", "id", "subject")
+    req_par = base_url + "choosableindepartments?fields=" + ",".join(fields)
+    return req_par
+
+
+
+#data = get_appointments()
+#json_str = json.dumps(data, indent=4)
+#with open("sample.json", "w") as f:
+#    f.write(json_str)
+def request_data(endpoint):
+    print(f"Requesting data from {endpoint}...")
+    req = requests.get(endpoint, headers=HEADERS)
+    req.raise_for_status()
+    return req.json()["response"]["data"]
+
+if __name__ == "__main__":
+    urls = [
+        appointments(),
+        choosableindepartments(),
+        branchesofschools(),
+        users(),
+        departmentsofbranches(),
+        branches(),
+    ]
+
+    results = [request_data(url) for url in urls]
+
+    with open(f"{SCHOOLYEAR}.json", "w") as f:
+        json.dump(results, f, indent=4)
