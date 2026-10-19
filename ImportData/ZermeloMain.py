@@ -25,7 +25,7 @@ logging.basicConfig(filename="./logs/messages.log",
                     format='%(asctime)s %(levelname)s: %(message)s',
                     filemode='w')
 
-def appointments(year, school_year_id):
+def appointments(schoolYear_id, schoolYear, user_id=21187):
 
     fields = (
         "id", "appointmentInstance", "start", "end", "startTimeSlot", "endTimeSlot",
@@ -37,85 +37,83 @@ def appointments(year, school_year_id):
         "extraStudentSource", "onlineLocationUrl", "expectedStudentCount",
         "expectedStudentCountOnline", "udmUUID", "creator", "onlineStudents",
         "appointmentLastModified", "remark", "availableSpace", "subjects",
-        "teachers", "onlineTeachers",
+        "teachers", "onlineTeachers", "availableSpace", "branch", "cancelledReason",
+        "choosableInDepartments", "creator", "expectedStudentCount", 
+        "expectedStudentCountOnline", "extraStudentSource", "groupsInDepartments",
+        "locationsOfBranch", "modified", "moved", "new", "onlineLocationUrl", "onlineStudents", "onlineTeachers", "remark", "udmUUID"
     )
-
+    print("schoolYear_id: ", schoolYear_id)
     # schooljaar `year` loopt van 1 aug `year` t/m 31 jul `year + 1`
-    start = int(datetime.datetime(int(year), 8, 1).timestamp())
-    end = int(datetime.datetime(int(year) + 1, 7, 31).timestamp())
+    start = int(datetime.datetime(int(schoolYear), 8, 1).timestamp())
+    end = int(datetime.datetime(int(schoolYear) + 1, 7, 31).timestamp())
 
-    data = get_endpoint("appointments", "schoolInSchoolYear=" + str(school_year_id) + "&user=21187" + "&start=" + str(start) + "&end=" + str(end) + "&fields=" + ",".join(fields))
+    data = get_endpoint("appointments", "schoolInSchoolYear=" + str(schoolYear_id) + "&user=" + str(user_id) + "&start=" + str(start) + "&end=" + str(end) + "&fields=" + ",".join(fields))
     print(data)
     return data
 
 
-def branchesofschools():
-    fields = ("branch", "id", "schoolInSchoolYear")
-    data = get_endpoint("branchesofschools", "fields=" + ",".join(fields))
+def branchesofschools(schoolYear_id):
+    fields = ("branch", "id", "schoolInSchoolYear", "name")
+    data = get_endpoint("branchesofschools", "&fields=" + ",".join(fields))
     return data
 
 
-def users():
-    fields = ("code",)
-    data = get_endpoint("users", "fields=" + ",".join(fields))
-    return data
-
-
-def departmentsofbranches (): 
-    fields = ("branchOfSchool", "code","id", "schoolInSchoolYear")
+def departmentsofbranches (schoolYear_id): 
+    fields = ("branchOfSchool", "code","id")
     data = get_endpoint("departmentsofbranches", "fields=" + ",".join(fields))
     return data
 
-def branches():
+def branches(schoolYear_id):
     fields = ("name", "code", "somCode", "somUuid")
     data = get_endpoint("branches", "fields=" + ",".join(fields))
     return data
 
-def choosableindepartments():
+def choosableindepartments(schoolYear_id):
     fields = ("departmentOfBranch", "id", "subject")
     data = get_endpoint("choosableindepartments", "fields=" + ",".join(fields))
     return data
 
-def groupindepartments():
+def groupindepartments(schoolYear_id):
     fields = ("id")
     data = get_endpoint("groupindepartments", "fields=" + fields)
     return data
 
-def holidays():
+def holidays(schoolYear):
     fields = ("id", "start", "end", "schoolInSchoolYear", "name")
     data = get_endpoint("holidays", "fields=" + ",".join(fields))
     return data
 
-def jobs():
+def jobs(schoolYear):
     fields = ("contract", "created", "durationManually", "employmentType", "end", "fte", "fteReal", "functionCategory", "id", "lastModified", "lastModifiedBy", "start")
     data = get_endpoint("jobs", "fields=" + ",".join(fields))
     return data
 
-def locationofbranches():
+def locationofbranches(schoolYear):
     fields = ("branchOfSchool", "id", "name", "schoolInSchoolYear")
     data = get_endpoint("locationofbranches", "fields=" + ",".join(fields))
     return data
 
-def schoolsinschoolyears():
+def schoolsinschoolyears(schoolYear):
     fields = ("archived", "archivedTime", "id", "name", "school","year")
     data = get_endpoint("schoolsinschoolyears","schoolInSchoolYear=" + str("602") + "&fields=" + ",".join(fields))
     return data
 
-def timeslotnames():
+def timeslotnames(schoolYear):
     fields = ("code","id", "schoolInSchoolYear")
     data = get_endpoint("timeslotnames", "fields=" + ",".join(fields))
     return data
 
-def studentsindepartments ():
-    fields = ("id", "schoolInSchoolYear", "student")
-    data = get_endpoint("studentsindepartments", "fields=" + ",".join(fields))
+def studentsindepartments (schoolYear):
+    fields = ("id","student","departmentOfBranch","mentorGroup","mainGroup","groupInDepartments","fullName","schoolInSchoolYear","firstName","lastName","departmentOfBranchCode","mainGroupName","prefix")
+    data = get_endpoint("studentsindepartments", "schoolInSchoolYear=652&archived=true&fields=" + ",".join(fields))
     return data
+
+
 
 #data = get_appointments()
 #json_str = json.dumps(data, indent=4)
 #with open("sample.json", "w") as f:
 #    f.write(json_str)
-
 def get_endpoint(endpoint, parameters):
     url = base_url + endpoint + "?" + parameters
     req = requests.get(url, headers=HEADERS)
@@ -133,4 +131,7 @@ def get_endpoint(endpoint, parameters):
         raise Exception(str(response["status"]) + response["message"])
     return response["data"]
 
-print(studentsindepartments())
+
+print(branchesofschools(SCHOOLYEAR))
+
+

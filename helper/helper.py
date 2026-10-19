@@ -41,4 +41,4 @@ def convert_id_to_year(id):
     return data[0]['year']
 
 
-print(convert_year_to_id(2026))
+print(get_year_id())
