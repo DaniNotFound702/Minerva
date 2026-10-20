@@ -59,7 +59,7 @@ def branchesofschools(schoolYear_id):
 
 
 def departmentsofbranches (schoolYear_id): 
-    fields = ("branchOfSchool", "code","id")
+    fields = ("branchOfSchoolCode", "educationType", "educations", "mainGroupAuthority", "profiles", "schoolInSchoolYearId", "schoolInSchoolYearName", "teacherTeams", "teachingLevel", "weekTimeTable", "yearOfEducation")
     data = get_endpoint("departmentsofbranches", "fields=" + ",".join(fields))
     return data
 
@@ -69,13 +69,13 @@ def branches(schoolYear_id):
     return data
 
 def choosableindepartments(schoolYear_id):
-    fields = ("departmentOfBranch", "id", "subject")
+    fields = ("courseType", "departmentOfBranchCode", "excludedSegments", "iltCode", "isExam", "lessonHoursInClassPeriods", "qualifiedCode", "scheduleCode", "scroungeSegments", "sectionOfBranch", "sectionOfBranchAbbreviation", "studentCanEdit", "subjectCode", "subjectName", "subjectScheduleCode", "subjectType")
     data = get_endpoint("choosableindepartments", "fields=" + ",".join(fields))
     return data
 
 def groupindepartments(schoolYear_id):
-    fields = ("id")
-    data = get_endpoint("groupindepartments", "fields=" + fields)
+    fields = ("id", "departmentOfBranch", "extendedName", "isMainGroup", "isMentorGroup", "name")
+    data = get_endpoint("groupindepartments", "fields=" + ",".join(fields))
     return data
 
 def holidays(schoolYear):
@@ -83,21 +83,21 @@ def holidays(schoolYear):
     data = get_endpoint("holidays", "fields=" + ",".join(fields))
     return data
 
-def jobs(schoolYear):
-    fields = ("contract", "created", "durationManually", "employmentType", "end", "fte", "fteReal", "functionCategory", "id", "lastModified", "lastModifiedBy", "start")
-    data = get_endpoint("jobs", "fields=" + ",".join(fields))
-    return data
-
 def locationofbranches(schoolYear):
-    fields = ("branchOfSchool", "id", "name", "schoolInSchoolYear")
+    fields = ("branchOfSchool", "id", "name", "schoolInSchoolYear", "allowMeetings", "parentteachernightCapacity", "secondaryBranches", "supportsConcurrentAppointments")
     data = get_endpoint("locationofbranches", "fields=" + ",".join(fields))
     return data
 
+
 def schoolsinschoolyears(schoolYear):
-    fields = ("archived", "archivedTime", "id", "name", "school","year")
+    fields = ("archived", "archivedTime", "id", "name", "school","year", "branchOfSchools", "project", "projectName", "schoolHrmsCode", "schoolName")
     data = get_endpoint("schoolsinschoolyears","schoolInSchoolYear=" + str("602") + "&fields=" + ",".join(fields))
     return data
 
+def student():
+    fields = ("email", "familyMambers", "firstName", "lastName", "prefix", "userCode", "city", "dateOfBirth", "gender", "houseNumber", "individualRequestsParents", "intakeProjects", "lwoo", "studentNumber")
+    data = get_endpoint("students", "fields=" + ",".join(fields))
+    return data
 def timeslotnames(schoolYear):
     fields = ("code","id", "schoolInSchoolYear")
     data = get_endpoint("timeslotnames", "fields=" + ",".join(fields))
@@ -116,6 +116,7 @@ def studentsindepartments (schoolYear):
 #    f.write(json_str)
 def get_endpoint(endpoint, parameters):
     url = base_url + endpoint + "?" + parameters
+    print("Requesting URL: ", url)
     req = requests.get(url, headers=HEADERS)
     json_data = json.loads(req.text)
     messagefile = "./logs/messages/message" + datetime.datetime.now().strftime("-%Y%m%d-%H%M%S%f") + ".json"
@@ -132,6 +133,4 @@ def get_endpoint(endpoint, parameters):
     return response["data"]
 
 
-print(branchesofschools(SCHOOLYEAR))
-
-
+print(student())
