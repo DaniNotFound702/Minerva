@@ -52,3 +52,15 @@ This log is based on the committed Git history of the project.
 
 ## 2026-10-21 - Added dev log
 - Added a dev log file
+
+## 2026-10-23 - Database and API wrapper
+
+- Added SQLite-backed student and appointment data models through the `Blueprints` modules.
+- Added student and appointment import scripts that fetch API data and store it in the local database.
+- Added a Selenium-based helper for obtaining the Zermelo API authorization token through the login flow.
+- Added a helper for retrieving school-year IDs and a helper for logging API messages.
+- Refactored the API helper functions and expanded the import workflow.
+- Added Django project scaffolding, including settings, URL configuration, WSGI/ASGI entry points, and a student API endpoint.
+- Added a root `main.py` and `manage.py` for the database/API application.
+- Updated the README and `.gitignore` for the new project structure.
+- Commit: `ed3e3c5` (`added database for the students and a api wrapper`)
