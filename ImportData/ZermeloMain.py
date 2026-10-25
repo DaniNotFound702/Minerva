@@ -6,8 +6,9 @@ import json
 import logging
 from os.path import dirname, abspath
 import os
-sys.path.append(abspath(dirname(dirname(__file__))))
+sys.path.insert(0, abspath(dirname(dirname(__file__))))
 import helper.log_api_message as log_api_message
+from helper.api import get_endpoint
 
 
 log_api_message = log_api_message.log_api_message 
@@ -54,6 +55,7 @@ def appointments(schoolYear_id, schoolYear, user_id):
     data = get_endpoint("appointments", "schoolInSchoolYear=" + str(schoolYear_id) + "&user=" + str(user_id) + "&start=" + str(start) + "&end=" + str(end) + "&fields=" + ",".join(fields))
     return data
 
+#print(appointments(602, 2025, 21187))
 
 def branchesofschools():
     fields = ("branch", "id", "schoolInSchoolYear", "name")
@@ -112,37 +114,5 @@ def subjectselectionsubjects(schoolYear):
     fields = ("id","student","departmentOfBranch","mentorGroup","mainGroup","groupInDepartments","fullName","schoolInSchoolYear","firstName","lastName","departmentOfBranchCode","mainGroupName","prefix")
     data = get_endpoint("subjectselectionsubjects", "schoolInSchoolYear=" + str("602") + "&fields=" + ",".join(fields))
     return data
-
-def get_endpoint(endpoint, parameters):
-    url = f"{base_url}{endpoint}?{parameters}"
-    try:
-        req = requests.get(url, headers=HEADERS)
-        
-        json_data = req.json()
-        # Logging the API request and response
-        log_api_message(url, HEADERS, json_data)
-
-        api_response = json_data.get("response", {})
-        status = api_response.get("status")
-        
-        if status != 200:
-            message = api_response.get("message", "Onbekende fout")
-            logging.error(f"Fout in get_endpoint: {status} {message}")
-            
-            # 401 Unauthorized logica
-            if status == 401:
-                logging.info("Token verlopen. Nieuw token ophalen en opnieuw proberen...")
-                get_api_token()
-                logging.info("Nieuw token opgehaald. Probeer opnieuw. door opnieuw te starten.")
-                quit()
-            raise Exception(f"API Error {status}: {message}")
-            
-        return json_data["response"]["data"]
-    except requests.exceptions.RequestException as e:
-        logging.error(f"Netwerk of HTTP fout in get_endpoint: {e}")
-        raise
-    except Exception as e:
-        logging.error(f"Onverwachte fout in get_endpoint: {e}")
-        raise
 
 

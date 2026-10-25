@@ -1,38 +1,119 @@
 # Zermelo API client
 
-This project interacts with the Zermelo API for a school. It builds requests
-for selected API endpoints and currently provides a command-line workflow for
-downloading the responses as a JSON file. The available data includes:
+This project communicates with the Zermelo API. It can request data from
+selected API endpoints, import appointments, and save data in JSON or SQLite
+databases.
 
-- Appointments
-- Choosable departments
-- Branches of schools
-- Users
-- Departments of branches
-- Branches
-- and a lot more
+The project was developed as part of the Terra hackathon. You need access to the correct school environment and a valid API token before you
+can run or test it. So thats why i will make an showcase video for each week where i will showcase new features. 
 
-## Terra-specific project
+Terra prepweek 3 demo vid:
 
-This project was created specifically for Terra schools and is intended to
-communicate with Terra's Zermelo API. It is not a general-purpose client that
-can be used by anyone without additional configuration.
-
-### API token required
-
-You need a valid Zermelo API token to use this project. The token is required to
-authenticate requests to the Zermelo API and to retrieve data for the correct
-school environment. Without a token, the requests cannot be authenticated, so
-the project cannot be run or properly tested. Thats why i will make a vid for each week!
-
-#### Terra prepweek 3 demo vid:
 https://youtu.be/EDJ7mm9nUns
 
-### Current functionality
+Terra week 1 demo vid:
 
-The project currently provides a command-line workflow for requesting data
-from selected Zermelo API endpoints and saving the responses as a JSON file.
-The available data includes:
+https://youtu.be/EyiI8oIQkUc
+
+## Installation
+
+Clone or download this repository and open a terminal in the project folder.
+Python 3.10 or newer is recommended.
+
+Create and activate a virtual environment:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
+
+On Windows, activate it with:
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+Install the required Python packages:
+
+```bash
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+## Environment configuration
+
+Create a `.env` file in the root of the repository by copying
+`.example.env`:
+
+```bash
+cp .example.env .env
+```
+
+Fill in the values in `.env`:
+
+```env
+SCHOOL=your-school
+SCHOOLYEAR=your-school-year-id
+AUTHORIZATION=Bearer your-api-token
+EMAIL=your-email-address
+PASSWORD=your-password
+USER=your-user-id
+```
+
+`SCHOOL` is the school name used in the Zermelo URL, for example
+`https://your-school.zportal.nl`. `AUTHORIZATION` must contain the full header
+value, including `Bearer `. `SCHOOLYEAR` and `USER` are used by some parts of
+the project. `EMAIL` and `PASSWORD` are only needed when using the automatic
+token helper.
+
+Do not commit or share `.env`. It contains credentials and API access data.
+The repository already ignores this file through `.gitignore`.
+
+### Getting an API token
+
+The project cannot work without a valid Zermelo API token. Without one, API
+requests will be rejected and the scripts cannot be properly tested. A token
+can be entered manually in `.env` as `AUTHORIZATION=Bearer your-api-token`.
+
+The helper in `helper/get_api_token.py` can also retrieve a token through the
+Zermelo login flow. This requires `EMAIL`, `PASSWORD`, Google Chrome, and a
+compatible ChromeDriver. The helper currently expects ChromeDriver at
+`/usr/bin/chromedriver` on Linux.
+
+## Using the command-line client
+
+Run the main interactive client from the repository root:
+
+```bash
+python main.py
+```
+
+The menu lets you request appointments, branches, departments, holidays,
+students, and other data from the Zermelo API. The results are printed as JSON.
+
+## Importing appointments for students
+
+`ImportData/MassImportAppointments.py` imports appointments for a range of
+student IDs. Before using it, make sure that:
+
+- `.env` contains a valid `SCHOOL` and `AUTHORIZATION` value;
+- `database.db` exists and contains the required `STUDENTS` table;
+- you run the command from the repository root.
+
+Use this command:
+
+```bash
+python ImportData/MassImportAppointments.py students FirstId LastId
+```
+
+This imports appointments for student IDs `FirstId` through `LastId`, including
+both the first and last ID. The imported appointments are stored in
+`appointments.db`. The script commits the data when the import finishes.
+
+
+## Current functionality
+
+Available API data includes:
 
 - Appointments
 - Choosable departments
@@ -40,10 +121,13 @@ The available data includes:
 - Users
 - Departments of branches
 - Branches
-- Additional data exposed by the API
+- Holidays and school years
+- Students and subjects
 
-# Credits
-A lot of code is inspirrated from [ZermeloUtils](https://github.com/electricsteve/ZermeloUtils) by electricsteve! 
+## Credits
 
-# How was AI used
-I used AI to explain stuff and it help compleating the `get_api_token.py` and writing this readme and devlog!
+Parts of this project are inspired by
+[ZermeloUtils](https://github.com/electricsteve/ZermeloUtils) by electricsteve.
+
+AI was used to help explain code, complete parts of `get_api_token.py`, and
+write documentation.
