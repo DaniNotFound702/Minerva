@@ -64,3 +64,14 @@ This log is based on the committed Git history of the project.
 - Added a root `main.py` and `manage.py` for the database/API application.
 - Updated the README and `.gitignore` for the new project structure.
 - Commit: `ed3e3c5` (`added database for the students and a api wrapper`)
+
+## 2026-10-25 - Mass appointment import
+
+- Added `ImportData/MassImportAppointments.py` to import appointments for a range of student IDs.
+- Expanded the appointment importer to fetch, convert, and store appointment data in `appointments.db`.
+- Added shared API and school-year helpers in `helper/api.py` and `helper/year.py`.
+- Removed the older duplicate helper modules and moved their functionality into the new helpers.
+- Added an `.example.env` file and a `requirements.txt` file for setup and dependencies.
+- Expanded the README with installation instructions, environment configuration, token setup, and mass-import usage.
+- Updated the student API route to `/api/students/`.
+- Commit: `d641363` (`Implemented massImportAppointments`)
