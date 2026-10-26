@@ -1,35 +1,9 @@
-import requests
-from dotenv import load_dotenv
 import sys
 import datetime
-import json
-import logging
 from os.path import dirname, abspath
-import os
 sys.path.insert(0, abspath(dirname(dirname(__file__))))
-import helper.log_api_message as log_api_message
 from helper.api import get_endpoint
 
-
-log_api_message = log_api_message.log_api_message 
-load_dotenv()
-SCHOOL = os.getenv("SCHOOL")
-SCHOOLYEAR = os.getenv("SCHOOLYEAR")
-AUTHORIZATION = os.getenv("AUTHORIZATION")
-
-base_url = "https://" + str(SCHOOL) + ".zportal.nl/api/3/"
-
-HEADERS = {
-    "Authorization": AUTHORIZATION
-}
-
-if not os.path.isdir("./logs"):
-    os.mkdir("./logs")
-if not os.path.isdir("./logs/messages"):
-    os.mkdir("./logs/messages")
-logging.basicConfig(filename="./logs/messages.log",
-                    format='%(asctime)s %(levelname)s: %(message)s',
-                    filemode='w')
 
 def appointments(schoolYear_id, schoolYear, user_id):
 
@@ -55,7 +29,6 @@ def appointments(schoolYear_id, schoolYear, user_id):
     data = get_endpoint("appointments", "schoolInSchoolYear=" + str(schoolYear_id) + "&user=" + str(user_id) + "&start=" + str(start) + "&end=" + str(end) + "&fields=" + ",".join(fields))
     return data
 
-#print(appointments(602, 2025, 21187))
 
 def branchesofschools():
     fields = ("branch", "id", "schoolInSchoolYear", "name")
@@ -106,13 +79,13 @@ def timeslotnames(schoolYear):
 
 def studentsindepartments (schoolYear):
     fields = ("id","student","departmentOfBranch","mentorGroup","mainGroup","groupInDepartments","fullName","schoolInSchoolYear","firstName","lastName","departmentOfBranchCode","mainGroupName","prefix")
-    data = get_endpoint("studentsindepartments", "schoolInSchoolYear=" + str("602") + "&fields=" + ",".join(fields))
+    data = get_endpoint("studentsindepartments", "schoolInSchoolYear=" + str(schoolYear) + "&fields=" + ",".join(fields))
     return data
 
 
 def subjectselectionsubjects(schoolYear):
-    fields = ("id","student","departmentOfBranch","mentorGroup","mainGroup","groupInDepartments","fullName","schoolInSchoolYear","firstName","lastName","departmentOfBranchCode","mainGroupName","prefix")
-    data = get_endpoint("subjectselectionsubjects", "schoolInSchoolYear=" + str("602") + "&fields=" + ",".join(fields))
+    fields = ("id", "schoolInSchoolYear")
+    data = get_endpoint("subjectselectionsubjects", "schoolInSchoolYear=" + str(schoolYear) + "&fields=" + ",".join(fields))
     return data
 
 

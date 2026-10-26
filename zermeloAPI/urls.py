@@ -21,8 +21,10 @@ import os
 from os.path import dirname, abspath
 sys.path.append(abspath(dirname(dirname(__file__))))
 from zermeloAPI.endpoints.students import students
+from zermeloAPI.endpoints.Appointments import appointments
 
 urlpatterns = [
-    path('api/students/', students)
+    path('api/students/', students),
+    path('api/appointments/', appointments)
     
 ]
