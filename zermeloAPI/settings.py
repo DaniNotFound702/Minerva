@@ -49,6 +49,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'zermeloAPI.middleware.api_auth.APIKeyMiddleware'
+
 ]
 
 ROOT_URLCONF = 'zermeloAPI.urls'

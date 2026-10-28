@@ -62,7 +62,7 @@ def holidays():
     return data
 
 def locationofbranches():
-    fields = ("id", "student", "departmentOfBranch", "mentorGroup", "mainGroup", "groupInDepartments", "fullName", "schoolInSchoolYear", "firstName", "lastName", "departmentOfBranchCode", "mainGroupName", "prefix")
+    fields = ("id", "schoolInSchoolYear")
     data = get_endpoint("locationofbranches", "fields=" + ",".join(fields))
     return data
 
@@ -88,4 +88,4 @@ def subjectselectionsubjects(schoolYear):
     data = get_endpoint("subjectselectionsubjects", "schoolInSchoolYear=" + str(schoolYear) + "&fields=" + ",".join(fields))
     return data
 
-
+print(branches())

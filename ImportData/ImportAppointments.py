@@ -18,7 +18,7 @@ dbCursor = dbConn.cursor()
 mass = False
 
 massUsers = {}
-
+student_tabels = ([row[0] for row in dbCursor.execute("SELECT name FROM sqlite_master WHERE type='table';").fetchall()])
 lock = threading.Lock()
 
 massAppointmentObjectList = {}
@@ -119,17 +119,24 @@ def makeSureTablesExist(week, year):
     appointmentCursor.execute(table)
 
 
-def setMass(value):
+def setMass(value, student_table=None):
     global mass
     mass = value
     if value:
         global massUsers
-        users = dbCursor.execute("SELECT student, departmentOfBranchCode FROM STUDENTS").fetchall()
-        for user in users:
-            if "1" in user[1]:
-                massUsers[user[0]] = True
-            else:
-                massUsers[user[0]] = False
+        if student_table is None:
+            tables = [table for table in student_tabels if table.startswith("STUDENTS_")]
+        else:
+            tables = [student_table]
+        for table in tables:
+            users = dbCursor.execute(
+                f'SELECT student, departmentOfBranchCode FROM "{table.replace(chr(34), chr(34) * 2)}"'
+            ).fetchall()
+            for user in users:
+                if "1" in user[1]:
+                    massUsers[user[0]] = True
+                else:
+                    massUsers[user[0]] = False
 
 def saveAppointments(appointmentObjectList):
     for (year, week) in appointmentObjectList:

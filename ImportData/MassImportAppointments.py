@@ -16,7 +16,7 @@ def splitList(inputList, n):
 
 def importThread(inputStudents, start, end):
     for student in inputStudents:
-        ImportAppointments.ImportAppointments(student[0], start, end)
+        ImportAppointments.ImportAppointments(student[0])
 
 def savingThread():
     while True:
@@ -38,9 +38,20 @@ if __name__ == "__main__":
     if action == "allDatabase":
         conn = sqlite3.connect('./database.db')
         c = conn.cursor()
-        c.execute("SELECT student FROM STUDENTS")
+        student_table = c.execute("""
+            SELECT name
+            FROM sqlite_master
+            WHERE type = 'table' AND name LIKE 'STUDENTS_%'
+            ORDER BY CAST(substr(name, 10) AS INTEGER) DESC
+            LIMIT 1
+        """).fetchone()
+        if student_table is None:
+            raise RuntimeError("No STUDENTS_<year-id> table found")
+
+        table_name = student_table[0].replace('"', '""')
+        c.execute(f'SELECT student FROM "{table_name}"')
         students = c.fetchall()
-        ImportAppointments.setMass(True)
+        ImportAppointments.setMass(True, student_table[0])
         numberOfThreads = 10
         lists = list(splitList(students, len(students) // numberOfThreads))
         if numberOfThreads > len(lists):

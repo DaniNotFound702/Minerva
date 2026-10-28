@@ -32,3 +32,4 @@ def convert_id_to_year(id):
     fields = ("archived", "archivedTime", "id", "name", "school","year")
     data = get_endpoint("schoolsinschoolyears","id=" + str(id) + "&fields=" + ",".join(fields))
     return data[0]['year']
+
