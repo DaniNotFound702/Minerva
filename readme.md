@@ -15,6 +15,12 @@ Terra week 1 demo vid:
 
 https://youtu.be/EyiI8oIQkUc
 
+# Why Minerva?
+
+Minerva is the Roman goddess of wisdom, learning, and strategic thinking. She
+represents the purpose of this project: turning complex school data into
+useful knowledge and helping users find the information they need.
+
 ## Installation
 
 Clone or download this repository and open a terminal in the project folder.
