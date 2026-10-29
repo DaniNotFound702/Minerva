@@ -32,6 +32,10 @@ On Windows, activate it with:
 ```powershell
 .venv\Scripts\Activate.ps1
 ```
+On linux with 
+```bash
+source .venv/bin/activate
+```
 
 Install the required Python packages:
 
@@ -110,6 +114,40 @@ This imports appointments for student IDs `FirstId` through `LastId`, including
 both the first and last ID. The imported appointments are stored in
 `appointments.db`. The script commits the data when the import finishes.
 
+To import appointments for all students in the latest students table, use:
+
+```bash
+python ImportData/MassImportAppointments.py allDatabase
+```
+
+## Local api wrapper
+I also build a api wrapper with django, it runs on `http://localhost:8000` You can request fields or everything, supported enpoints are:
+`/api/students` and `/api/appointments/`.
+
+### Supported students field
+with the `/api/students` the following fields are supported:
+
+| Field | Type |
+| ---|----|
+|id|Int|
+|student|String|
+|departmentOfBranch|Int|
+|MmentorGroup|Int|
+|mainGroup|Int|
+|groupInDepartments|String|
+|fullName|String|
+|schoolInSchoolYear|Int|
+|firstName|String|
+|lastName|String|
+|departmentOfBranchCode|String|
+|mainGroupName|String|
+|prefix|String|
+
+The api requird an api key definned in `.env` as `API_WRAPPER_KEY` generage this key with 
+ ```bash
+openssl rand -hex 32  
+```
+And put it in the reqeust header as `X-Api-Key: Api-Key`
 
 ## Current functionality
 

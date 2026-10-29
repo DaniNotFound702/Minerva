@@ -159,6 +159,7 @@ def ImportAppointments(user):
             if result is None:
                 print("No appointments returned for year: ", year)
                 continue
+            
             list_of_appointments.extend(result)
     except Exception as e:
             raise e
