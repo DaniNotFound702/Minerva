@@ -1,17 +1,10 @@
 import sqlite3
 import sys
 from os.path import dirname, abspath
-from os import getenv
 sys.path.append(abspath(dirname(dirname(__file__))))
 from Blueprints.Student import Student
 from helper.year import get_year_id
 import ZermeloMain as Zermelo
-from dotenv import load_dotenv
-
-load_dotenv()
-SCHOOL_YEAR = getenv("SCHOOL_YEAR")
-print("SCHOOL_YEAR: ", SCHOOL_YEAR)
-
 
 def saveStudents():
     conn = sqlite3.connect('./database.db')

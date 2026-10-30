@@ -3,16 +3,7 @@ from dotenv import load_dotenv
 from os import getenv
 import sys
 from os.path import dirname, abspath
-sys.path.append(abspath(dirname(dirname(__file__))))
-from helper.api import get_endpoint
 
-load_dotenv()
-AUTHORIZATION = getenv("AUTHORIZATION")
-SCHOOL = getenv("SCHOOL")
-base_url = "https://" + str(SCHOOL) + ".zportal.nl/api/3/"
-HEADERS = {
-    "Authorization": AUTHORIZATION
-}
 
 def get_year_id():
     fields = ("year", "id")
