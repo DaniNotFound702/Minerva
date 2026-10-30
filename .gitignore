@@ -1,4 +1,23 @@
+# Bytecode & Caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Databases
+*.db
+*.sqlite3
+
+# Build & packaging artifacts
+dist/
+build/
+*.egg-info/
+
+
+# Environment
 .env
+.venv/
+env/
+
 *.json
 test.py
 __pycache__/
