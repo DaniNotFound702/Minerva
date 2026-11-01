@@ -1,8 +1,8 @@
 import logging
 import os
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 import requests
-from helper.log_api_message import log_api_message
+from .log_api_message import log_api_message
 
 
 logger = logging.getLogger(__name__)
@@ -17,6 +17,12 @@ class ZermeloAPIError(Exception):
 
 
 class ZermeloAPIClient:
+    """Client for making authenticated requests to the Zermelo API.
+
+    Pass credentials directly for library use. Environment variables are kept
+    as a fallback for applications that already configure their environment.
+    """
+
     def __init__(
         self,
         school: Optional[str] = None,
@@ -45,8 +51,17 @@ class ZermeloAPIClient:
         headers = dict(self.session.headers)
 
         try:
-            response = self.session.get(url)
-            json_data = response.json()
+            response = self.session.get(url, timeout=30)
+            try:
+                json_data = response.json()
+            except ValueError as error:
+                body_preview = response.text[:200].replace("\n", " ")
+                raise ZermeloAPIError(
+                    response.status_code,
+                    "Zermelo returned a non-JSON response "
+                    f"(content-type: {response.headers.get('Content-Type', 'unknown')}, "
+                    f"body: {body_preview!r})",
+                ) from error
             log_api_message(url, headers, json_data)
 
             api_response = json_data.get("response", {})
@@ -72,6 +87,8 @@ class ZermeloAPIClient:
 
         except requests.exceptions.RequestException as error:
             logger.error("Network or HTTP error in get_endpoint: %s", error)
+            raise
+        except ZermeloAPIError:
             raise
         except Exception as error:
             logger.error("Unexpected error in get_endpoint: %s", error)

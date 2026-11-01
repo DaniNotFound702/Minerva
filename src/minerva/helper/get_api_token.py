@@ -8,21 +8,19 @@ import os
 from time import sleep
 from json import loads
 
-load_dotenv()
-SCHOOL = os.getenv("SCHOOL")
-if not SCHOOL:
-    raise ValueError("SCHOOL is not set in the environment variables.")
-EMAIL = os.getenv("EMAIL")
-if not EMAIL:
-    raise ValueError("EMAIL is not set in the environment variables.")
-PASSWORD = os.getenv("PASSWORD")
-if not PASSWORD:
-    raise ValueError("PASSWORD is not set in the environment variables.")
 
-base_url = "https://" + str(SCHOOL) + ".zportal.nl/api/3/" + "oauth?sso=true"
 
-def get_api_token():
-    PATH = "/usr/bin/chromedriver"
+
+def get_api_token(school, email, password, chromedriver_path="/usr/bin/chromedriver", wait_time=2):
+    if not school:
+        raise ValueError("School is not provided.")
+    if not email:
+        raise ValueError("Email is not provided.")
+    if not password:
+        raise ValueError("Password is not provided.")
+    base_url = "https://" + str(school) + ".zportal.nl/api/3/" + "oauth?sso=true"
+
+    PATH = chromedriver_path
     service = Service(executable_path=PATH)
     
     # 1. Schakel DevTools performance logging in om headers op te vangen
@@ -33,35 +31,32 @@ def get_api_token():
 
     try:
         driver.get(base_url)
-        sleep(1)
+        sleep(wait_time)
 
         email_input = driver.find_element(By.NAME, "loginfmt")
-        email_input.send_keys(EMAIL)
+        email_input.send_keys(email)
 
         summit_button = driver.find_element(By.ID, "idSIButton9")
         summit_button.click()
-        sleep(1)
+        sleep(wait_time)
 
         # Wachtwoord invullen
         password_input = driver.find_element(By.ID, "i0118")
-        password_input.send_keys(PASSWORD)
-        sleep(1)
+        password_input.send_keys(password)
+        sleep(wait_time)
 
         summit_button = driver.find_element(By.ID, "idSIButton9")
         summit_button.click()
-        sleep(1)
+        sleep(wait_time)
 
-        # Eventuele "Aangemeld blijven?" pop-up doorklikken
         try:
             stay_signed_in = driver.find_element(By.ID, "idSIButton9")
             stay_signed_in.click()
         except Exception:
             pass
+        
+        sleep(wait_time*2)
 
-        # Wacht even tot de browser de Zermelo API-calls met de Authorization header uitvoert
-        sleep(4)
-
-        # 2. Doorzoek de netwerklogs naar de Authorization header
         logs = driver.get_log("performance")
         token = None
 
@@ -85,17 +80,7 @@ def get_api_token():
                 continue
 
         if token:
-            # Sla het token op in een .env-bestand
-            with open(".env", "r") as f:
-                lines = f.readlines()
-            cleaned_lines = [
-                line for line in lines 
-                if not line.strip().startswith("AUTHORIZATION=")
-            ]
-            cleaned_lines.append(f"AUTHORIZATION=Bearer {token}\n")   
-
-            with open(".env", "w") as env_file:
-                env_file.writelines(cleaned_lines)
+            return token
         else:
             return None
 

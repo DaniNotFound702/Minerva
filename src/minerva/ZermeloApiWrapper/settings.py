@@ -15,14 +15,18 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+# The repository root contains db.sqlite3 and the wrapper databases.
+BASE_DIR = Path(__file__).resolve().parents[3]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "development-only-change-me")
+
+# Set this from the host application or a custom Django settings module.
+# It is intentionally not loaded from .env.
+API_WRAPPER_KEY = None
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -49,11 +53,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'zermeloAPI.middleware.api_auth.APIKeyMiddleware'
+    'minerva.ZermeloApiWrapper.middleware.api_auth.APIKeyMiddleware'
 
 ]
 
-ROOT_URLCONF = 'zermeloAPI.urls'
+ROOT_URLCONF = 'minerva.ZermeloApiWrapper.urls'
 
 TEMPLATES = [
     {
@@ -70,7 +74,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'zermeloAPI.wsgi.application'
+WSGI_APPLICATION = 'minerva.ZermeloApiWrapper.wsgi.application'
 
 
 # Database

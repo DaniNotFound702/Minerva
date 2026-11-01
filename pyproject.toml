@@ -1,23 +1,27 @@
 [build-system]
-requires = ["hatchling >= 1.26"]
+requires = ["hatchling>=1.26"]
 build-backend = "hatchling.build"
 
 [project]
-name = "Minerva_DaniNotFound702"
-version = "0.0.1"
-authors = [
-  { name="DaniNotFound702", email="admin@homedatacenter.nl" },
-]
-description = "A project/lib for interacting with the zermelo API"
+name = "minerva-zermelo"
+version = "0.1.0"
+description = "Python client for the Zermelo API"
 readme = "readme.md"
-requires-python = ">=3.14"
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "Operating System :: OS Independent",
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+dependencies = [
+  "requests>=2.31,<3",
 ]
-license = "MIT"
-license-files = ["LICEN[CS]E*"]
+
+[project.optional-dependencies]
+django = ["Django>=6.1,<7"]
+token = ["selenium>=4.25,<5"]
+dev = ["pytest", "build", "twine"]
 
 [project.urls]
 Homepage = "https://github.com/DaniNotFound702/Minerva"
+Repository = "https://github.com/DaniNotFound702/Minerva"
 Issues = "https://github.com/DaniNotFound702/Minerva/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/minerva"]
