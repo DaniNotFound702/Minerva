@@ -19,7 +19,7 @@ build/
 env/
 
 *.json
-test
+
 __pycache__/
 logs/
 *.db
