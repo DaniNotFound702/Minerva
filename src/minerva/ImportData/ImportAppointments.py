@@ -1,13 +1,11 @@
 import datetime
 import sqlite3
-import sys
-from os.path import dirname, abspath
-sys.path.append(abspath(dirname(dirname(__file__))))
-from Blueprints.Appointment import Appointment
-import ZermeloMain as Zermelo
+from ..Blueprints.Appointment import Appointment
+from .ZermeloMain import ZermeloMain
 import threading
-from helper.year import get_year_id
-from helper.year import convert_id_to_year
+from ..helper.year import get_year_id
+from ..helper.year import convert_id_to_year
+from ..helper.api import ZermeloAPIClient
 
 # Create a connection to the database
 appointmentConn = sqlite3.connect('./appointments.db', check_same_thread=False)
@@ -149,13 +147,15 @@ def saveAppointments(appointmentObjectList):
             appointmentCursor.execute(f"INSERT OR REPLACE INTO '{year}-{week}' VALUES ({', '.join(['?'] * 42)})", appointmentObject.to_tuple())
             appointmentCursor.execute(f"INSERT OR REPLACE INTO EVERYTHING VALUES ({', '.join(['?'] * 42)})", appointmentObject.to_tuple())
 
-def ImportAppointments(user):
+def ImportAppointments(user, api_client=None):
+    api_client = api_client or ZermeloAPIClient()
+    zermelo = ZermeloMain(api_client)
 
     list_of_appointments = []
     try:
-        startYear, endYear, year_id = get_year_id()    
+        startYear, endYear, year_id = get_year_id(api_client)
         for year in range(startYear, endYear + 1):
-            result = Zermelo.appointments(year_id[year], year, user)
+            result = zermelo.appointments(year_id[year], year, user)
             if result is None:
                 print("No appointments returned for year: ", year)
                 continue

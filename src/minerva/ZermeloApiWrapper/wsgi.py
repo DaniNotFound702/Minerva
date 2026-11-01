@@ -11,6 +11,9 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'zermeloAPI.settings')
+os.environ.setdefault(
+	'DJANGO_SETTINGS_MODULE',
+	'minerva.ZermeloApiWrapper.settings',
+)
 
 application = get_wsgi_application()

@@ -14,14 +14,9 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
 from django.urls import path
-import sys
-import os
-from os.path import dirname, abspath
-sys.path.append(abspath(dirname(dirname(__file__))))
-from zermeloAPI.endpoints.students import students
-from zermeloAPI.endpoints.Appointments import appointments
+from .endpoints.students import students
+from .endpoints.Appointments import appointments
 
 urlpatterns = [
     path('api/students/', students),

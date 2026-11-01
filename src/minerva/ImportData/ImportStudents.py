@@ -1,25 +1,18 @@
 import sqlite3
-import sys
-from os.path import dirname, abspath
-from os import getenv
-sys.path.append(abspath(dirname(dirname(__file__))))
-from Blueprints.Student import Student
-from helper.year import get_year_id
-import ZermeloMain as Zermelo
-from dotenv import load_dotenv
+from ..Blueprints.Student import Student
+from ..helper.year import get_year_id
+from ..helper.api import ZermeloAPIClient
+from .ZermeloMain import ZermeloMain
 
-load_dotenv()
-SCHOOL_YEAR = getenv("SCHOOL_YEAR")
-print("SCHOOL_YEAR: ", SCHOOL_YEAR)
-
-
-def saveStudents():
+def saveStudents(api_client=None):
+    api_client = api_client or ZermeloAPIClient()
+    zermelo = ZermeloMain(api_client)
     conn = sqlite3.connect('./database.db')
     c = conn.cursor()
     try:
-        startYear, endYear, year_id = get_year_id()
+        startYear, endYear, year_id = get_year_id(api_client)
         for year in range(startYear, endYear + 1):
-            result = Zermelo.studentsindepartments(year_id[year])
+            result = zermelo.studentsindepartments(year_id[year])
             if result is None:
                 print("No students returned for year: ", year)
                 continue
@@ -60,4 +53,3 @@ def saveStudents():
         conn.close()
 
 
-saveStudents()
