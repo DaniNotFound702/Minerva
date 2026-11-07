@@ -24,9 +24,8 @@ BASE_DIR = Path(__file__).resolve().parents[3]
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "development-only-change-me")
 
-# Set this from the host application or a custom Django settings module.
-# It is intentionally not loaded from .env.
-API_WRAPPER_KEY = None
+# Set this in the process environment or override it from a host application.
+API_WRAPPER_KEY = os.getenv("API_WRAPPER_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

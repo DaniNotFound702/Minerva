@@ -153,13 +153,3 @@ This file records the complete committed Git history of the project in chronolog
 - Removed obsolete import code.
 - Commit: `1f607e7` (`small fixes + big refactor`)
 
-## 2026-11-01 - Library packaging refactor
-
-- Completed the library refactor in the `src/minerva` layout.
-- Updated `pyproject.toml` package metadata and build configuration.
-- Updated the README with expanded installation, usage, API, import, and library documentation.
-- Updated import scripts and mass appointment importing for the refactored package.
-- Updated the `ZermeloApiWrapper` Django package, authentication middleware, settings, URLs, and WSGI/ASGI files.
-- Improved API token, API request, and school-year helper implementations.
-- Updated `.gitignore` for the final package structure.
-- Commit: `7de39cc` (`libary refactor`)
