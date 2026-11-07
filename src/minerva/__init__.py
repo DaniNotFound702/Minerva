@@ -5,8 +5,23 @@ from .Blueprints.Appointment import Appointment
 from .Blueprints.Student import Student
 from .ImportData.ZermeloMain import ZermeloMain
 from .ImportData.MassImportAppointments import saveAll
+from .ImportData.ImportStudents import saveStudents
 from .helper.api import ZermeloAPIClient, ZermeloAPIError
 from .ZermeloApiWrapper import configure_api_wrapper
+
+
+def get_api_token(*args, **kwargs):
+    """Retrieve a token with the optional Selenium-based login helper."""
+    from .helper.get_api_token import get_api_token as retrieve_api_token
+
+    return retrieve_api_token(*args, **kwargs)
+
+
+def get_api_urlpatterns():
+    """Return the optional Django API URL patterns."""
+    from .ZermeloApiWrapper.urls import urlpatterns
+
+    return urlpatterns
 
 
 # Optioneel: metadata
@@ -23,6 +38,9 @@ __all__ = [
     "ZermeloMain",
     "ZermeloAPIClient",
     "ZermeloAPIError",
+    "saveStudents",
     "saveAll",
+    "get_api_token",
     "configure_api_wrapper",
+    "get_api_urlpatterns",
 ]   

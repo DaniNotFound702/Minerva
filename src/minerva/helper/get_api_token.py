@@ -3,8 +3,6 @@ from urllib.parse import urlparse, parse_qs
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-from dotenv import load_dotenv
-import os
 from time import sleep
 from json import loads
 
