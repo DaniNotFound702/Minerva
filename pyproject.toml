@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-django = ["Django>=6.1,<7"]
+django = ["Django>=6.1,<7", "python-dotenv>=1.0,<2"]
 token = ["selenium>=4.25,<5"]
 dev = ["pytest", "build", "twine"]
 
